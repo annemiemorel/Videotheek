@@ -9,6 +9,7 @@ require_once 'Exceptions/VideoNrBestaatException.php';
 require_once 'Exceptions/TitelBestaatException.php';
 require_once 'Exceptions/NummerBestaatNietException.php';
 require_once 'Exceptions/NummerIsAlUitgeleendException.php';
+require_once 'Exceptions/NummerIsNietUitgeleendException.php';
 use Data\DBConfig;
 use Entities\Video;
 use Entities\Titel;
@@ -18,6 +19,7 @@ use Exceptions\VideoNrBestaatException;
 use Exceptions\TitelBestaatException;
 use Exceptions\NummerBestaatNietException;
 use Exceptions\NummerIsAlUitgeleendException;
+use Exceptions\NummerIsNietUitgeleendException;
 use PDO;
 session_start();
 
@@ -114,26 +116,53 @@ public function getByOneTitel($titel){
 //       } else {
 //        throw new TitelBestaatException();}
 }
-public function create($titel) {  //nieuwe functie om boek te kunnen toevoegen
-    //**foutafhandeling**//
+//public function create($titel) {  //nieuwe functie om boek te kunnen toevoegen
+//    //**foutafhandeling**//
+//
+//    //$bestaandeVideo = $this->getByOneTitel($titel); //null indien nog niet bestaat, anders ?
+//
+//    //**foutafhandeling**//
+//    $sql = "insert into titels (titel) values (:titel)";
+//    //echo $sql;
+//    $dbh = new PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+//    $stmt = $dbh->prepare($sql); 
+//
+//    $stmt->execute(array(':titel' => $titel));
+//
+//    $gastId = $dbh->lastInsertId();
+//    $dbh = null; 
+//
+//    $titel = Titel::create($gastId, $titel);
+//    return $titel;
+//} 
+public function voegtiteltoe($titel){
+        $sql = "select id from titels where titel= :titel";
+        $dbh = new PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD); 
+         $stmt = $dbh->prepare($sql);
+     //print_r($stmt);
+        $stmt->execute(array(':titel' => $titel));
+        $rij = $stmt->fetch(PDO::FETCH_ASSOC);  //geen enkele titel kan dubbel voorkomen in lijst  titels
+              
+      if (!$rij) {  //niets gevonden
+        //echo "false";
+          
+            $sql = "insert into titels (titel) values (:titel)";
+           //echo $sql;
 
-    //$bestaandeVideo = $this->getByOneTitel($titel); //null indien nog niet bestaat, anders ?
+           $stmt = $dbh->prepare($sql); 
 
-    //**foutafhandeling**//
-    $sql = "insert into titels (titel) values (:titel)";
-    //echo $sql;
-    $dbh = new PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-    $stmt = $dbh->prepare($sql); 
+           $stmt->execute(array(':titel' => $titel));
+           $gastId = $dbh->lastInsertId();
+           $dbh = null; 
 
-    $stmt->execute(array(':titel' => $titel));
-
-    $gastId = $dbh->lastInsertId();
-    $dbh = null; 
-
-    $titel = Titel::create($gastId, $titel);
-    return $titel;
-} 
-
+           $titel = Titel::create($gastId, $titel);
+              return $titel;
+              
+      }
+       else{
+           throw new TitelBestaatException();
+       }
+}
 public function voegvideotoe($titel,$videonr){
         $sql = "select id from videos where videonr= :videonr";
         $dbh = new PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD); 
@@ -194,7 +223,7 @@ public function voegvideotoe($titel,$videonr){
        }
    } 
    public function brengnummer($nr){
-       if($this->getVideoNummer($nr)==true){
+       if($this->getVideoNummer($nr)==false){
        $sql="update videos set aanwezig= :aanwezig where videonr= :videonr";
            $dbh = new PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD); 
             $stmt = $dbh->prepare($sql);

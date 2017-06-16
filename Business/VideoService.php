@@ -31,7 +31,7 @@ Class VideoService{
     }
      public function voegTitelToe($titel) { //functie nodig om boek toe te voegen
         $gDAO = new VideoDAO();
-        $gDAO->create($titel);
+        $gDAO->voegtiteltoe($titel);
         return;
     } 
     public function voegVideoToe($titel,$nr) { //functie nodig om boek toe te voegen

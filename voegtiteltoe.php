@@ -19,7 +19,7 @@ if (isset($_GET["action"]) && $_GET["action"] == "voegtoe") {
     try {
        
         $gSvc = new VideoService();
-        $gSvc->voegVideoToe($_POST['titel']);
+        $gSvc->voegTitelToe($_POST['titel']);
         $titel=$_POST['titel'];
         header("location: Presentation/voegtiteltoeForm.php?titel=gemaakt&naam=$titel"); //hoofdmenu.php");  //
         exit(0);

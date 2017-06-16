@@ -38,10 +38,10 @@ if (isset($_GET["error"]) && $_GET["error"] == "titelbestaat") {
 
 if (isset($_GET['error'])) {
         if ($_GET['error'] == "geennummer") { ?>
-        <font color="#ff0000">U hebt geen naam ingegeven!</font>
+        <font color="#ff0000">U hebt geen nummer ingegeven!</font>
         <?php  }
        else if ($_GET['error'] == "nummerbestaatal") { ?>
-        <font color="#ff0000">Deze gast bestaat reeds!</font>
+        <font color="#ff0000">Dit nummer bestaat reeds!</font>
         <?php  }
        }
      exit(0);

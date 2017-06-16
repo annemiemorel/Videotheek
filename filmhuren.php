@@ -13,7 +13,7 @@ use Exceptions\NummerIsNietUitgeleendException;
 //require_once('bootstrap.php');
 
 if (isset($_GET["action"]) && $_GET["action"] == "process") {
-    if($_POST['ontleen']){
+    if(isset($_POST['ontleen']) && $_POST['ontleen']){
         //echo "nr= ".$_POST['nr'];
         $nr=$_POST['nr'];
         try{
@@ -30,7 +30,7 @@ if (isset($_GET["action"]) && $_GET["action"] == "process") {
             exit(0);
         }
     }
-    if($_POST['brengterug']){
+    if(isset($_POST['brengterug']) && $_POST['brengterug']){
         try{
         $Svc = new VideoService();
         $Svc->brengNummer($_POST['nr']);
