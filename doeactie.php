@@ -17,20 +17,14 @@ function haaltitels(){
 }
 if (isset($_GET["action"]) && $_GET["action"] == "init"){
     try{
-//     $pl = new VideoService(); 
-//     $lijst = $pl->getTitels(); 
-//     echo print_r($lijst);
-//        //echo $lijst[0]->getPrijs();
-       $lijst=haaltitels();
+    $lijst=haaltitels();
     $_SESSION['lijst']=$lijst;   
-    //echo print_r($lijst);
-//    $pl2 = new VideoService();
-//    $lijst2 = $pl2->
+
      $aantaltitels=count($lijst);
             echo "aantal = ". $aantaltitels;
         for($x=0;$x<$aantaltitels;$x++) { 
             $Svc= new VideoService();
-           $_SESSION['videogeg'][$x]=$Svc->getVideoGegevens($lijst[$x]['id']); 
+           $_SESSION['videogeg'][$x]=$Svc->getVideoGegevens($lijst[$x]['id']); //videogegevens van titel in $x
         }
         echo print_r($_SESSION['videogeg']);
     header("location: Presentation/hoofdmenuView.php");

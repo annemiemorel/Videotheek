@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+$nummers = array();
+$aanwezig = array();
 ?> 
 <!DOCTYPE html>
 <html>
@@ -10,7 +11,7 @@ session_start();
         <title>Videotheek - Hoofdmenu</title>
     </head>
     <body>
-       
+        
         <h1>Videotheek</h1>
         <div style="border: 2px #3399CC solid; padding-left: 1em">
         <p>Raadpleeg de catalogus van onze videotheek </p></div>
@@ -29,31 +30,39 @@ session_start();
             
           <?php  $lijst=$_SESSION['lijst'];
                  $videogeg=$_SESSION['videogeg'];
-           // echo print_r($videogeg);
+          // echo print_r($videogeg);
             
             //echo "Aantal broodjes = ".count($lijst);
             $aantaltitels=count($lijst);
            // echo "aantal titels = ". $aantaltitels;
         for($x=0;$x<$aantaltitels;$x++) { 
-           
+           if(isset($videogeg[$x][0]['aanwezig'])){  //zijn er gegevens voor deze titel?
            $titel[$x]=$lijst[$x]['titel'];
            $aantalgeg=count($videogeg[$x]);
           // echo "aantal geg = ".$aantalgeg;
+           
            for($y=0;$y<$aantalgeg;$y++){
-          $nummers[$x]=$videogeg[$x][$y]['videonr'];
-           $aanwezig[$x]=$videogeg[$x][$y]['aanwezig'];
-//           if($x>0){
-//               for($y=$x-1;$y<$x;$y++){
-//                   if($titel[$x]==$titel[$y]){
-//                       $nummers[$x]=$nummers[$x]." ".$nummers[$y];  //hoe vet en niet vet bij aanwezig/niet aanwezig op deze manier???
-//                       $aanwezig[$x]+=$aanwezig[$y];
-//                   }
-//               }
-//           }
+               while(!isset($nummers[$x])){
+                $nummers[$x] = '';
+               $aanwezig[$x] = 0;}
+               
+                if(isset($videogeg[$x])){ 
+                    if($videogeg[$x][$y]['aanwezig']==1 ){
+                        $nummers[$x].="<b>".$videogeg[$x][$y]['videonr']."</b> ";
+                       // echo "y1=".$y." ";
+                    }else{
+                        $nummers[$x].=$videogeg[$x][$y]['videonr']." ";
+                        //echo "y2=".$y." ";
+                    }
+                $aanwezig[$x]+=$videogeg[$x][$y]['aanwezig'];
+               // echo "y3=".$y." ";
+                    }}
+           
+
             ?>
                <tr> <td> <?php print($titel[$x]); ?></td>
-                   <td><?php if($aanwezig[$x]){print("<b>".$nummers[$x]."</b>"); }else{print($nummers[$x]);}?></td>
-                   <td><?php print($aanwezig[$x]); ?></td> 
+                <td><?php print($nummers[$x]);?></td>
+                   <td><?php print($aanwezig[$x]);?></td> 
                </tr>
                    
              
